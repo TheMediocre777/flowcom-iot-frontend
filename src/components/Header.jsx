@@ -25,7 +25,7 @@ export default function Header({ lastUpdated, isConnected, onRefresh }) {
           </h1>
         </div>
         <p style={{ margin: 0, fontSize: 11, color: "rgba(255,255,255,0.3)", fontFamily: "'DM Mono', monospace", letterSpacing: 1 }}>
-          MONITORING DASHBOARD · NODE-01
+          MONITORING DASHBOARD · SP-10
         </p>
       </div>
 
