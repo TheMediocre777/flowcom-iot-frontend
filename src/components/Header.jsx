@@ -21,10 +21,10 @@ export default function Header({ lastUpdated, isConnected, onRefresh }) {
             </svg>
           </div>
           <h1 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#fff", letterSpacing: -0.5 }}>
-            Monitoring Flowcom <span style={{ color: "#00d4ff" }}>Pertamina Rantau</span>
+            Monitoring Flowcom <span style={{ color: "#00d4ff" }}>Pertamina Field Rantau</span>
           </h1>
         </div>
-        <p style={{ margin: 0, fontSize: 11, color: "rgba(88, 154, 234, 0.3)", fontFamily: "'DM Mono', monospace", letterSpacing: 1 }}>
+        <p style={{ margin: 0, fontSize: 11, color: "rgba(253, 253, 253, 0.55)", fontFamily: "'DM Mono', monospace", letterSpacing: 1 }}>
           LOKASI · SP-10
         </p>
       </div>
