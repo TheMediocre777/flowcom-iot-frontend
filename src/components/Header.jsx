@@ -21,7 +21,7 @@ export default function Header({ lastUpdated, isConnected, onRefresh }) {
             </svg>
           </div>
           <h1 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#fff", letterSpacing: -0.5 }}>
-            FlowSense <span style={{ color: "#00d4ff" }}>IoT</span>
+            Monitoring Flowcom <span style={{ color: "#00d4ff" }}>Pertamina Rantau</span>
           </h1>
         </div>
         <p style={{ margin: 0, fontSize: 11, color: "rgba(255,255,255,0.3)", fontFamily: "'DM Mono', monospace", letterSpacing: 1 }}>
