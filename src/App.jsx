@@ -1,121 +1,108 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState, useEffect, useCallback } from "react";
+import Header from "./components/Header";
+import MetricCard from "./components/MetricCard";
+import ChartPanel from "./components/ChartPanel";
+import DataTable from "./components/DataTable";
+import { generateMockHistory, generateNewDataPoint } from "./utils/mockData";
+import { getLatestValues } from "./utils/helpers";
+import "./index.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const METRICS = ["flowrate", "pressure", "temperature", "totalizer"];
+
+export default function App() {
+  const [history, setHistory] = useState(() => generateMockHistory(20));
+  const [selectedMetric, setSelectedMetric] = useState("flowrate");
+  const [lastUpdated, setLastUpdated] = useState("");
+  const [isConnected] = useState(true);
+
+  const updateTime = () => {
+    setLastUpdated(
+      new Date().toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }) + " WIB"
+    );
+  };
+
+  const fetchData = useCallback(() => {
+    setHistory(prev => {
+      const last = prev[prev.length - 1];
+      return [...prev.slice(-29), generateNewDataPoint(last)];
+    });
+    updateTime();
+  }, []);
+
+  useEffect(() => {
+    updateTime();
+    const interval = setInterval(fetchData, 3000);
+    return () => clearInterval(interval);
+  }, [fetchData]);
+
+  const latest = getLatestValues(history);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div style={{
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, #080e1a 0%, #0a1628 50%, #080e1a 100%)",
+      fontFamily: "'Syne', sans-serif",
+      padding: "32px 24px",
+      animation: "fadeUp 0.5s ease both",
+    }}>
+      <div style={{
+        position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0,
+        backgroundImage: `
+          radial-gradient(ellipse 60% 40% at 10% 10%, rgba(0,212,255,0.05) 0%, transparent 60%),
+          radial-gradient(ellipse 40% 60% at 90% 80%, rgba(167,139,250,0.05) 0%, transparent 60%)
+        `,
+      }} />
 
-      <div className="ticks"></div>
+      <div style={{ position: "relative", zIndex: 1, maxWidth: 1280, margin: "0 auto" }}>
+        <Header
+          lastUpdated={lastUpdated}
+          isConnected={isConnected}
+          onRefresh={fetchData}
+        />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: 16,
+          marginBottom: 20,
+        }}>
+          {METRICS.map((key, i) => (
+            <div key={key} style={{ animation: `fadeUp 0.4s ease ${i * 0.07}s both` }}>
+              <MetricCard
+                metricKey={key}
+                value={latest[key] ?? 0}
+                isSelected={selectedMetric === key}
+                onClick={() => setSelectedMetric(key)}
+              />
+            </div>
+          ))}
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 16,
+          animation: "fadeUp 0.5s ease 0.3s both",
+        }}>
+          <ChartPanel metricKey={selectedMetric} history={history} />
+          <DataTable history={history} />
+        </div>
+
+        <div style={{
+          marginTop: 24,
+          textAlign: "center",
+          fontSize: 10,
+          color: "rgba(255,255,255,0.15)",
+          fontFamily: "'DM Mono', monospace",
+          letterSpacing: 2,
+        }}>
+          FLOWSENSE IOT · POC v0.1 · DATA REFRESHED EVERY 3s
+        </div>
+      </div>
+    </div>
+  );
 }
-
-export default App
